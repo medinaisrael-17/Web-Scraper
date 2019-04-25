@@ -88,3 +88,7 @@ app.post("/articles/:id", function(req, res) {
         res.json(err)
     });
 });
+
+app.listen(PORT, function() {
+    console.log("App running on: https://localhost:" + PORT );
+});
