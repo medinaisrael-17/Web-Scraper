@@ -25,3 +25,30 @@ app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost/webScraper", { useNewUrlParser: true });
 
+app.get("/scrape", function (req, res) {
+    axios.get("https://old.reddit.com/r/news/").then(function (response) {
+        var $ = cheerio.load(response.data);
+
+        $("p.title").each(function (i, element) {
+
+            var result = {};
+
+            result.title = $(this).text();
+
+            result.link = $(this).children().attr("href");
+
+            if (link[0] === "/") {
+                link = URL + link;
+            }
+
+            db.Article.create(result).then(function(dbArticle) {
+                console.log(dbArticle);
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
+        });
+        
+        res.send("Scrape Complete");
+    });
+});
