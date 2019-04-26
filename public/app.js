@@ -1,13 +1,16 @@
 $.getJSON("/articles", function(data) {
-    for (var i = 0; i < data.lenght; i++ ) {
-        $("#articles").append("<p data-id='" + 
-        data[i]._id + "'>" + 
-        data[i].title + "<br />" + 
-        data[i].link + "</p>");
+    console.log(data)
+    for (var i = 0; i < data.length; i++ ) {
+        $("#articles").append(`
+        <div id = "articleCard" class = "card"> 
+        <h5 class="card-title"> ${data[i].title} </h5>
+        <p>Article Link: <a href = "${data[i].link}" target = "_blank"> ${data[i].link} </a> </p>
+        <button data-id = ${data[i]._id} class="btn btn-primary" id = "noteButton"> Make A Note </button>
+        `)   
     }
 });
 
-$(document).on("click", "p", function() {
+$(document).on("click", "button", function() {
     $("#notes").empty();
 
     var thisId = $(this).attr("data-id");

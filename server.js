@@ -11,7 +11,7 @@ var cheerio = require("cheerio");
 // Require all models
 var db = require("./models");
 
-var PORT = 3000;
+var PORT = 8080;
 
 var app = express();
 
@@ -23,7 +23,10 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/webScraper", { useNewUrlParser: true });
+// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 app.get("/scrape", function (req, res) {
     axios.get("https://old.reddit.com/r/news/").then(function (response) {
@@ -35,10 +38,10 @@ app.get("/scrape", function (req, res) {
 
             result.title = $(this).text();
 
-            result.link = $(this).children().attr("href");
-
-            if (link[0] === "/") {
-                link = URL + link;
+            result.link = $(this).children("a").attr("href");
+            console.log(result);
+            if (result.link[0] === "/") {
+                result.link = URL + link;
             }
 
             db.Article.create(result).then(function(dbArticle) {
