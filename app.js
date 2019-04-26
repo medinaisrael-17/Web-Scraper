@@ -1,5 +1,5 @@
 $.getJSON("/articles", function(data) {
-    for (let i = 0; i < data.lenght; i++ ) {
+    for (var i = 0; i < data.lenght; i++ ) {
         $("#articles").append("<p data-id='" + 
         data[i]._id + "'>" + 
         data[i].title + "<br />" + 
